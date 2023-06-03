@@ -1,0 +1,79 @@
+1.
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class HashTable {
+private:
+    static const int TABLE_SIZE = 100; // Size of the hash table
+    struct Node {
+        string key;
+        string value;
+        Node* next;
+    };
+    vector<Node*> table;
+
+    // Hash function to calculate the hash value
+    int hashFunction(string key) {
+        int hash = 0;
+        for (char c : key) {
+            hash += c;
+        }
+        return hash % TABLE_SIZE;
+    }
+
+public:
+    HashTable() {
+        table.resize(TABLE_SIZE, nullptr);
+    }
+
+    // Insert a key-value pair into the hash table
+    void insert(string key, string value) {
+        int index = hashFunction(key);
+        Node* newNode = new Node();
+        newNode->key = key;
+        newNode->value = value;
+        newNode->next = nullptr;
+
+        if (table[index] == nullptr) {
+            table[index] = newNode;
+        } else {
+            Node* curr = table[index];
+            while (curr->next != nullptr) {
+                curr = curr->next;
+            }
+            curr->next = newNode;
+        }
+    }
+
+    // Retrieve the telephone number for a given client name
+    string lookup(string key) {
+        int index = hashFunction(key);
+        Node* curr = table[index];
+        while (curr != nullptr) {
+            if (curr->key == key) {
+                return curr->value;
+            }
+            curr = curr->next;
+        }
+        return "Not found";
+    }
+};
+
+int main() {
+    HashTable telephoneBook;
+
+    // Inserting some sample data
+    telephoneBook.insert("John Smith", "123456789");
+    telephoneBook.insert("Jane Doe", "987654321");
+    telephoneBook.insert("Alice Johnson", "456123789");
+
+    // Looking up telephone numbers
+    cout << "Telephone number for John Smith: " << telephoneBook.lookup("John Smith") << endl;
+    cout << "Telephone number for Jane Doe: " << telephoneBook.lookup("Jane Doe") << endl;
+    cout << "Telephone number for Alice Johnson: " << telephoneBook.lookup("Alice Johnson") << endl;
+
+    return 0;
+}
