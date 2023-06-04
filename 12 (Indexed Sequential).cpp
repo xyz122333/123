@@ -8,7 +8,7 @@ struct Employee {
     char name[50];
     char designation[50];
     float salary;
-}
+};
 void addEmployee(fstream& file) {
     Employee emp;
     cout << "Enter employee ID: ";
