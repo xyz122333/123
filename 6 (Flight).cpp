@@ -1,92 +1,130 @@
-#include <iostream>
-#include <cstring>
+
+#include<iostream>
+#include<string.h>
 using namespace std;
-const int MAX_CITIES = 100;
 
-struct Flight {
-    string source;
-    string destination;
-    int cost;
+class flight
+{ 	 
+	public:
+		int am[10][10];
+           		char city_index[10][10];
+		flight();
+	   	int create();
+	   	void display(int city_count);
+            
 };
-class Graph {
-public:
-    int adjList[MAX_CITIES][MAX_CITIES];
-    int numCities;
-    Graph() {
-        numCities = 0;
-        memset(adjList, 0, sizeof(adjList));
-    }
-    void addFlight(Flight flight) {
-        int sourceIndex = getCityIndex(flight.source);
-        int destIndex = getCityIndex(flight.destination);
-        adjList[sourceIndex][destIndex] = flight.cost;
-    }
-    // Check if the graph is connected using BFS
-    bool isConnected() {
-        bool visited[MAX_CITIES];
-        memset(visited, false, sizeof(visited));
-        // Start BFS from any vertex
-        int start = 0;
-        visited[start] = true;
-        for (int i = 0; i < numCities; i++) {
-            if (adjList[start][i] > 0 && !visited[i]) {
-                visited[i] = true;
-            }
-        }
-        for (int i = 1; i < numCities; i++) {
-            if (!visited[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-private:
-    int getCityIndex(string city) {
-        for (int i = 0; i < numCities; i++) {
-            if (city == cities[i]) {
-                return i;
-            }
-        }
-        cities[numCities] = city;
-        numCities++;
-        return numCities - 1;
-    }
-    // Array to store names of cities
-    string cities[MAX_CITIES];
-};
+flight::flight()
+{
+	int i,j;
+	for(i=0;i<10;i++)
+	{
+		strcpy(city_index[i],"xx");
+	}
+	for(i=0;i<10;i++)
+	{
+		for(j=0;j<10;j++)
+		{
+			am[i][j]=0;
+		}
+	}
+}
+
+int flight::create()
+{
+	int city_count=0,j,si,di,wt;
+	char s[10],d[10],c;
+	do
+	{
+		cout<<"\n\tEnter Source City      : ";
+		cin>>s;
+		cout<<"\n\tEnter Destination City : ";
+		cin>>d;
+		for(j=0;j<10;j++)
+		{
+			if(strcmp(city_index[j],s)==0)
+			break;
+		}
+		if(j==10)
+		{
+			strcpy(city_index[city_count],s);
+			city_count++;
+		}
+
+		for(j=0;j<10;j++)
+		{
+			if(strcmp(city_index[j],d)==0)
+			break;
+		}
+
+		if(j==10)
+		{
+			strcpy(city_index[city_count],d);
+			city_count++;
+		}
+
+		cout<<"\n\t Enter Distance From "<<s<<" And "<<d<<": ";
+		cin>>wt;
+
+		for(j=0;j<10;j++)
+		{
+			if(strcmp(city_index[j],s)==0)
+				si=j;
+			if(strcmp(city_index[j],d)==0)
+				di=j;
+		}
+
+
+
+		am[si][di]=wt;
+		cout<<"\n\t Do you want to add more cities.....(y/n) : ";
+		cin>>c;	
+	}while(c=='y'||c=='Y');
+ return(city_count);
+}
+void flight::display(int city_count)
+{
+	int i,j;
+	cout<<"\n\t Displaying Adjacency Matrix :\n\t";
+	for(i=0;i<city_count;i++)
+		cout<<"\t"<<city_index[i];
+	cout<<"\n";
+
+	for(i=0;i<city_count;i++)
+	{
+		cout<<"\t"<<city_index[i];
+		for(j=0;j<city_count;j++)
+		{
+		  	cout<<"\t"<<am[i][j];	
+		}
+		cout<<"\n";
+	}
+}
 
 int main()
 {
-    Graph g;
-    int choice;
-    Flight flight;
-    do {
-        cout << "\n1. Add a flight\n2. Check if graph is connected\n3. Exit\nEnter choice: ";
-        cin >> choice;
-        switch (choice) {
-        case 1:
-            cout << "\nEnter source city: ";
-            cin >> flight.source;
-            cout << "Enter destination city: ";
-            cin >> flight.destination;
-            cout << "Enter cost of flight: ";
-            cin >> flight.cost;
-            g.addFlight(flight);
-            break;
-        case 2:
-            if (g.isConnected())
-                cout << "\nGraph is connected";
-            else
-                cout << "\nGraph is not connected";
-            break;
-        case 3:
-            cout << "\nExiting...";
-            break;
-        default:
-            cout << "\nInvalid choice";
-            break;
-        }
-    } while (choice != 3);
-    return 0;
+	flight f;
+	int n,city_count;
+	char c;
+	do
+	{
+		cout<<"\n\t*** Flight Main Menu *****";
+		cout<<"\n\t1. Create \n\t2. Adjacency Matrix\n\t3. Exit";
+		cout<<"\n\t.....Enter your choice : ";
+		cin>>n;
+		switch(n)
+		{
+			case 1:
+					city_count=f.create();
+					break;
+			case 2:
+					f.display(city_count);
+					break;
+			case 3:
+					return 0;
+		}
+		cout<<"\n\t Do you Want to Continue in Main Menu....(y/n) : ";
+		cin>>c;
+	}while(c=='y'||c=='Y');
+	return 0;
 }
