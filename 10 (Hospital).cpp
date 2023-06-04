@@ -6,7 +6,7 @@ struct Patient {
   string name;
   int priority;
 };
-bool operator<(const Patient& a, const Patient& b) { return a.priority < b.priority; }
+bool operator<(const Patient& a, const Patient& b) { return a.priority > b.priority; }
 
 int main() {
   priority_queue<Patient> q;
